@@ -12,10 +12,9 @@ jobs:
     - name: build term
       run: |
         cd term && docker build . -t apk
-        docker run --rm apk sh -c "cat term/build/outputs/apk/release/term-release-unsigned.apk | sha256sum"
-        docker run --rm apk cat term/build/outputs/apk/release/term-release-unsigned.apk | sha256sum
         docker run --rm apk | sha256sum
         docker run --rm apk > term-unsigned.apk
+        sha256sum term-unsigned.apk
     - name: sign term
       env:
         KS: ${{ secrets.KS }}
