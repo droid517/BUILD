@@ -1,5 +1,10 @@
 name: BuildTest
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: github release ref
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,12 +14,16 @@ jobs:
     - name: build term
       run: |
         cd term && docker build . -t apk
-        docker run --rm apk > term-release-unsigned.apk
+        docker run --rm apk > term-unsigned.apk
     - name: sign term
       env:
         KS: ${{ secrets.KS }}
         KP: ${{ secrets.KP }}
       run: |
         echo "$KS" | base64 -d > signer.jks
-        zipalign -v -p 4 term-release-unsigned.apk term-release-unsigned-aligned.apk
-        apksigner sign --ks signer.jks --ks-pass "$KP" --out term-release.apk term-release-unsigned-aligned.apk
+        apt update && apt install -y zipalign apksigner
+        zipalign -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
+        apksigner sign --ks signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
+    - name: upload term
+      run: |
+        gh release upload ${{ github.event.inputs.tag }} term.apk
