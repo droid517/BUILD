@@ -13,7 +13,6 @@ jobs:
       run: |
         cd term && docker build . -t apk
         docker run --rm apk > term-unsigned.apk
-        chmod 666 term-unsigned.apk
     - name: sign term
       env:
         KS: ${{ secrets.KS }}
@@ -21,7 +20,7 @@ jobs:
       run: |
         echo "$KS" | base64 -d > /tmp/signer.jks
         sudo apt update && sudo apt install -y zipalign apksigner
-        zipalign -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
+        zipalign -f -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
         apksigner sign --ks /tmp/signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
     - name: upload
       uses: actions/upload-pages-artifact@v3
