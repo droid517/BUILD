@@ -25,8 +25,8 @@ jobs:
         zipalign -v -p 4 $(pwd)/term-unsigned.apk $(pwd)/term-unsigned-aligned.apk
         apksigner sign --ks /tmp/signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
     - name: upload
-      uses: actions/upload-pages-artifact@v3.0.1
+      uses: actions/upload-pages-artifact@v3
       with:
           path: '.'
     - name: deploy
-      uses: actions/deploy-pages@v4.0.5
+      uses: actions/deploy-pages@v4
