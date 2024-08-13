@@ -20,6 +20,7 @@ jobs:
       run: |
         echo "$KS" | base64 -d > /tmp/signer.jks
         sudo apt update && sudo apt install -y zipalign apksigner
+        ls -lh
         # zipalign -f -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
         # apksigner sign --ks /tmp/signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
     - name: upload
