@@ -11,7 +11,8 @@ jobs:
       uses: actions/checkout@v4
     - name: build term
       run: |
-        cd term && docker build . -t apk
+        cd term
+        docker build . -t apk
         docker run --rm apk > term-unsigned.apk
     - name: sign term
       env:
@@ -20,9 +21,10 @@ jobs:
       run: |
         echo "$KS" | base64 -d > /tmp/signer.jks
         sudo apt update && sudo apt install -y zipalign apksigner
-        ls -lh
-        # zipalign -f -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
-        # apksigner sign --ks /tmp/signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
+        cd term
+        zipalign -f -v -p 4 term-unsigned.apk term-unsigned-aligned.apk
+        apksigner sign --ks /tmp/signer.jks --ks-pass "$KP" --out term.apk term-unsigned-aligned.apk
+        tree > index.md
     - name: upload
       uses: actions/upload-pages-artifact@v3
       with:
