@@ -1,9 +1,5 @@
 name: BuildTest
-on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: github release ref
+on: workflow_dispatch
 permissions:
   pages: write
   id-token: write
