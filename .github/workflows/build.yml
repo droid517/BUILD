@@ -7,4 +7,14 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
     - name: build term
-      run: cd term && docker build . -t apk
+      run: |
+        cd term && docker build . -t apk
+        docker run --rm apk > term-release-unsigned.apk
+    - name: sign term
+      env:
+        KS: ${{ secrets.KS }}
+        KP: ${{ secrets.KP }}
+      run: |
+        echo "$KS" | base64 -d > signer.jks
+        zipalign -v -p 4 term-release-unsigned.apk term-release-unsigned-aligned.apk
+        apksigner sign --ks signer.jks --ks-pass "$KP" --out term-release.apk term-release-unsigned-aligned.apk
