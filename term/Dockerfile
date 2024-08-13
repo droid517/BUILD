@@ -7,4 +7,4 @@ RUN git clone https://github.com/droid517/term.git /tmp/app
 WORKDIR /tmp/app
 RUN gradle clean
 RUN gradle build
-CMD term/build/outputs/apk/release/term-release-unsigned.apk
+CMD cat term/build/outputs/apk/release/term-release-unsigned.apk
