@@ -1,4 +1,4 @@
-name: Build
+name: BuildTest
 on: workflow_dispatch
 jobs:
   build:
